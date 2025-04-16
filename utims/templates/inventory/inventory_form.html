@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .form-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #fff;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+    }
+    
+    /* Improve dropdown styling */
+    .form-group select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+    
+    .form-group select option {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+    }
+    
+    /* Highlight dropdown on focus */
+    .form-group select:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+    
+    .form-group textarea {
+        height: 100px;
+        resize: vertical;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+    
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+    
+    .cancel-btn {
+        background-color: #666;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    
+    .help-text {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #888;
+    }
+</style>
+
+<div class="form-container">
+    <h2 class="form-title">{% if object %}Edit Inventory Item{% else %}Create New Inventory Item{% endif %}</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Item Name:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="error" style="color: #f44336;">
+                    {{ form.name.errors }}
+                </div>
+            {% endif %}
+            <div class="help-text">Enter a unique name for this inventory item.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Category:</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <div class="error" style="color: #f44336;">
+                    {{ form.category.errors }}
+                </div>
+            {% endif %}
+            <div class="help-text">Select or create a category for this item.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.quantity.id_for_label }}">Quantity:</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}
+                <div class="error" style="color: #f44336;">
+                    {{ form.quantity.errors }}
+                </div>
+            {% endif %}
+            <div class="help-text">Enter the current stock level.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.price_per_unit.id_for_label }}">Price per Unit ($):</label>
+            {{ form.price_per_unit }}
+            {% if form.price_per_unit.errors %}
+                <div class="error" style="color: #f44336;">
+                    {{ form.price_per_unit.errors }}
+                </div>
+            {% endif %}
+            <div class="help-text">Enter the price per unit in dollars.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.low_stock_threshold.id_for_label }}">Low Stock Threshold:</label>
+            {{ form.low_stock_threshold }}
+            {% if form.low_stock_threshold.errors %}
+                <div class="error" style="color: #f44336;">
+                    {{ form.low_stock_threshold.errors }}
+                </div>
+            {% endif %}
+            <div class="help-text">When quantity falls below this value, the item will be marked as low stock.</div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'inventory:list' %}" class="cancel-btn">Cancel</a>
+            <button type="submit" class="submit-btn">
+                {% if object %}Save Changes{% else %}Create Item{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %} 

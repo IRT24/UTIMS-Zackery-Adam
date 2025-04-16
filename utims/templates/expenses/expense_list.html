@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .category-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9em;
+    }
+
+    .food { background-color: #2196F3; }
+    .supplies { background-color: #FF9800; }
+    .utilities { background-color: #4CAF50; }
+
+    .action-btn {
+        text-decoration: none;
+        margin-right: 10px;
+    }
+    .edit-btn { color: #2196F3; }
+    .delete-btn { color: #f44336; }
+    
+    .new-expense-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        float: right;
+        margin-bottom: 15px;
+    }
+
+    .sort-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 5px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .sort-btn:hover {
+        color: #2196F3;
+    }
+
+    .sort-btn i {
+        margin-left: 5px;
+        font-size: 0.8em;
+    }
+
+    .sort-active {
+        color: #2196F3;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .expense-header {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+</style>
+
+<h2 class="page-title">Expense List</h2>
+
+<div style="width: 100%; overflow: hidden;">
+    <a href="{% url 'expenses:create' %}" class="new-expense-btn">
+        <i class="fas fa-plus"></i> New Expense
+    </a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'category' %}sort-active{% endif %}" data-sort="category">
+                    Category
+                    {% if current_sort == 'category' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'amount' %}sort-active{% endif %}" data-sort="amount">
+                    Amount
+                    {% if current_sort == 'amount' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'date' %}sort-active{% endif %}" data-sort="date">
+                    Date
+                    {% if current_sort == 'date' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if expenses %}
+            {% for expense in expenses %}
+                <tr>
+                    <td>
+                        <a href="{% url 'expenses:detail' expense.id %}" style="color: #fff; text-decoration: none;">
+                            {{ expense.title }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="category-badge {{ expense.category|lower }}">
+                            {{ expense.get_category_display }}
+                        </span>
+                    </td>
+                    <td>${{ expense.amount }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>{{ expense.description|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'expenses:edit' expense.id %}" class="action-btn edit-btn" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'expenses:delete' expense.id %}" class="action-btn delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">No expenses found. Create your first expense!</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sortBy = this.dataset.sort;
+            const currentOrder = new URLSearchParams(window.location.search).get('order') || 'desc';
+            const newOrder = sortBy === '{{ current_sort }}' && currentOrder === 'asc' ? 'desc' : 'asc';
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', sortBy);
+            url.searchParams.set('order', newOrder);
+            
+            window.location.href = url.toString();
+        });
+    });
+});
+</script>
+{% endblock %}

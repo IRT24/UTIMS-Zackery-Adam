@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .reports-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #ffffff;
+    }
+
+    .reports-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .report-card {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .report-card h3 {
+        color: #ffffff;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+
+    .report-card p {
+        color: #888;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .report-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .download-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        flex: 1;
+        text-align: center;
+        transition: opacity 0.2s;
+    }
+
+    .download-btn:hover {
+        opacity: 0.9;
+    }
+
+    .excel-btn {
+        background-color: #217346;
+    }
+
+    .pdf-btn {
+        background-color: #FF4B4B;
+    }
+
+    .report-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        color: #4CAF50;
+    }
+</style>
+
+<div class="reports-container">
+    <h2 class="page-title">Reports Dashboard</h2>
+
+    <div class="reports-grid">
+        <!-- Inventory Reports -->
+        <div class="report-card">
+            <div class="report-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <h3>Inventory Reports</h3>
+            <p>Download complete inventory list with details including stock levels, prices, and categories.</p>
+            <div class="report-buttons">
+                <a href="{% url 'reports:inventory' 'excel' %}" class="download-btn excel-btn">
+                    <i class="fas fa-file-excel"></i> Excel
+                </a>
+                <a href="{% url 'reports:inventory' 'pdf' %}" class="download-btn pdf-btn">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Tasks Reports -->
+        <div class="report-card">
+            <div class="report-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <h3>Tasks Reports</h3>
+            <p>Get a complete list of tasks with their status, priority, and due dates.</p>
+            <div class="report-buttons">
+                <a href="{% url 'reports:tasks' 'excel' %}" class="download-btn excel-btn">
+                    <i class="fas fa-file-excel"></i> Excel
+                </a>
+                <a href="{% url 'reports:tasks' 'pdf' %}" class="download-btn pdf-btn">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Expenses Reports -->
+        <div class="report-card">
+            <div class="report-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3>Expenses Reports</h3>
+            <p>Download detailed expense reports with categories, amounts, and dates.</p>
+            <div class="report-buttons">
+                <a href="{% url 'reports:expenses' 'excel' %}" class="download-btn excel-btn">
+                    <i class="fas fa-file-excel"></i> Excel
+                </a>
+                <a href="{% url 'reports:expenses' 'pdf' %}" class="download-btn pdf-btn">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

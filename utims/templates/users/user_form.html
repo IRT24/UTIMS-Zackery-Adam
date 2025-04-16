@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_add %}Add User{% else %}Edit User{% endif %} - UTIMS{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #2a2a2a;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    /* Style all form inputs to match dark theme */
+    .form-control, 
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"],
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+        font-size: 14px;
+    }
+    
+    /* Apply styling to Django form elements directly */
+    #id_username, #id_email, #id_first_name, #id_last_name, 
+    #id_password1, #id_password2, #id_role, #id_is_active {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+        font-size: 14px;
+        max-width: 100%;
+    }
+    
+    /* Style select dropdown */
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+    }
+    
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+    }
+    
+    .form-check-input {
+        margin-right: 10px;
+        width: auto !important;
+        height: 16px;
+        width: 16px;
+    }
+    
+    .form-check-label {
+        color: #fff;
+    }
+    
+    .btn-primary {
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        width: auto;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0b7dda;
+    }
+    
+    .btn-secondary {
+        background-color: #777;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-left: 10px;
+        font-size: 14px;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #666;
+    }
+    
+    .form-help-text {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+    
+    .error {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    
+    /* Center the title */
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    /* Override the toggle button color specifically for this page */
+    .sidebar .toggle-btn {
+        background-color: #333 !important;
+    }
+    
+    /* Help text styling */
+    .helptext {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    /* Style form actions */
+    .form-actions {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    /* Style the list markers */
+    ul {
+        padding-left: 20px;
+        margin-top: 5px;
+        color: #999;
+    }
+    
+    li {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+    
+    /* Fix for form row layout */
+    .form-row {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <h2>{% if is_add %}Add New User{% else %}Edit User: {{ form.instance.username }}{% endif %}</h2>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <div class="error">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="error">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <div class="error">{{ form.first_name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                <div class="error">{{ form.last_name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.role.id_for_label }}">Role</label>
+                {{ form.role }}
+                {% if form.role.errors %}
+                <div class="error">{{ form.role.errors }}</div>
+                {% endif %}
+            </div>
+            
+            {% if is_add %}
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors }}</div>
+                {% endif %}
+                {% if form.password1.help_text %}
+                <div class="form-help-text">{{ form.password1.help_text }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors }}</div>
+                {% endif %}
+                {% if form.password2.help_text %}
+                <div class="form-help-text">{{ form.password2.help_text }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if not is_add %}
+            <div class="form-group">
+                <div class="form-check">
+                    {{ form.is_active }}
+                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active</label>
+                </div>
+                {% if form.is_active.help_text %}
+                <div class="form-help-text">{{ form.is_active.help_text }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{% if is_add %}Create User{% else %}Save Changes{% endif %}</button>
+                <a href="{% url 'users:list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

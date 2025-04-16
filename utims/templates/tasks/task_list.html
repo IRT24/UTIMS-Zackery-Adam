@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .status-badge, .priority-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9em;
+    }
+
+    /* Status colors */
+    .status-completed { background-color: #4CAF50; }
+    .status-in-progress { background-color: #2196F3; }
+    .status-pending { background-color: #FFC107; }
+
+    /* Priority colors */
+    .priority-high { background-color: #f44336; }
+    .priority-medium { background-color: #FF9800; }
+    .priority-low { background-color: #4CAF50; }
+
+    .action-btn {
+        text-decoration: none;
+        margin-right: 10px;
+    }
+    .edit-btn { color: #2196F3; }
+    .delete-btn { color: #f44336; }
+    
+    .new-task-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        float: right;
+        margin-bottom: 15px;
+    }
+
+    .assignee {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 15px;
+        background-color: #555;
+        color: white;
+        font-size: 0.9em;
+    }
+
+    .sort-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 5px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .sort-btn:hover {
+        color: #2196F3;
+    }
+
+    .sort-btn i {
+        margin-left: 5px;
+        font-size: 0.8em;
+    }
+
+    .sort-active {
+        color: #2196F3;
+    }
+</style>
+
+<h2 style="text-align: center; margin-bottom: 20px;">Task List</h2>
+
+<div style="width: 100%; overflow: hidden;">
+    <a href="{% url 'tasks:create' %}" class="new-task-btn">
+        <i class="fas fa-plus"></i> New Task
+    </a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'status' %}sort-active{% endif %}" data-sort="status">
+                    Status
+                    {% if current_sort == 'status' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'priority' %}sort-active{% endif %}" data-sort="priority">
+                    Priority
+                    {% if current_sort == 'priority' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>
+                <button class="sort-btn {% if current_sort == 'due_date' %}sort-active{% endif %}" data-sort="due_date">
+                    Due Date
+                    {% if current_sort == 'due_date' %}
+                        <i class="fas fa-sort-{% if current_order == 'asc' %}up{% else %}down{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-sort"></i>
+                    {% endif %}
+                </button>
+            </th>
+            <th>Assigned To</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if tasks %}
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description|truncatewords:30 }}</td>
+                    <td>
+                        <span class="status-badge status-{{ task.status|lower }}">
+                            {{ task.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="priority-badge priority-{{ task.priority|lower }}">
+                            {{ task.get_priority_display }}
+                        </span>
+                    </td>
+                    <td>{{ task.due_date|default:"No due date" }}</td>
+                    <td>
+                        {% if task.assignee %}
+                            <span class="assignee">{{ task.assignee.first_name }} {{ task.assignee.last_name }}</span>
+                        {% else %}
+                            <span style="color: #999;">Unassigned</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'tasks:edit' task.id %}" class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'tasks:delete' task.id %}" class="action-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center;">No tasks found. Create your first task!</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sortBy = this.dataset.sort;
+            const currentOrder = new URLSearchParams(window.location.search).get('order') || 'asc';
+            const newOrder = sortBy === '{{ current_sort }}' && currentOrder === 'asc' ? 'desc' : 'asc';
+            
+            const url = new URL(window.location.href);
+            url.searchParams.set('sort', sortBy);
+            url.searchParams.set('order', newOrder);
+            
+            window.location.href = url.toString();
+        });
+    });
+});
+</script>
+{% endblock %}

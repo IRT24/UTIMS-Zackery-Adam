@@ -1,0 +1,183 @@
+{% extends 'auth/base_auth.html' %}
+
+{% block title %}Sign Up - UTIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        background-color: #1e1e1e;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .auth-header h2 {
+        color: #fff;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    
+    .auth-header p {
+        color: #aaa;
+    }
+    
+    .auth-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #ddd;
+    }
+    
+    .auth-form input[type="text"],
+    .auth-form input[type="password"],
+    .auth-form input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+    
+    .auth-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+    
+    .auth-btn:hover {
+        background-color: #45a049;
+    }
+    
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .auth-links a {
+        color: #2196F3;
+        text-decoration: none;
+    }
+    
+    .auth-alert {
+        background-color: #f44336;
+        color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .error-text {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: -15px;
+        margin-bottom: 15px;
+    }
+    
+    .role-select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h2>Create Your Account</h2>
+        <p>Sign up to access the UTIMS system</p>
+    </div>
+    
+    {% if form.errors %}
+    <div class="auth-alert">
+        Please correct the errors below.
+    </div>
+    {% endif %}
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" required>
+            {% if form.username.errors %}
+            <p class="error-text">{{ form.username.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_email">Email:</label>
+            <input type="email" name="email" id="id_email" required>
+            {% if form.email.errors %}
+            <p class="error-text">{{ form.email.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_first_name">First Name:</label>
+            <input type="text" name="first_name" id="id_first_name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_last_name">Last Name:</label>
+            <input type="text" name="last_name" id="id_last_name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_password1">Password:</label>
+            <input type="password" name="password1" id="id_password1" required>
+            {% if form.password1.errors %}
+            <p class="error-text">{{ form.password1.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_password2">Confirm Password:</label>
+            <input type="password" name="password2" id="id_password2" required>
+            {% if form.password2.errors %}
+            <p class="error-text">{{ form.password2.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_role">Role:</label>
+            <select name="role" id="id_role" class="role-select" required>
+                <option value="">Select Role</option>
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="auth-btn">Sign Up</button>
+    </form>
+    
+    <div class="auth-links">
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</div>
+{% endblock %} 

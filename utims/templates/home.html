@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}UTIMS - Home{% endblock %}
+
+{% block content %}
+<style>
+    .welcome-container {
+        padding: 30px;
+        text-align: center;
+        max-width: 900px;
+        margin: 30px auto;
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .welcome-header {
+        margin-bottom: 30px;
+    }
+    
+    .welcome-header h1 {
+        font-size: 36px;
+        color: #ffffff;
+        margin-bottom: 15px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .welcome-message {
+        font-size: 18px;
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+    
+    .user-info {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: left;
+        border-left: 4px solid #4CAF50;
+    }
+    
+    .user-info h3 {
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+    
+    .user-info p {
+        color: #cccccc;
+    }
+    
+    .module-intro {
+        color: #e0e0e0;
+        font-size: 18px;
+        margin-bottom: 25px;
+    }
+    
+    .module-cards {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-top: 30px;
+    }
+    
+    .module-card {
+        background-color: #2c2c2c;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        width: 220px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #444;
+    }
+    
+    .module-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        border-color: #555;
+    }
+    
+    .module-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .inventory-icon { color: #2196F3; }
+    .tasks-icon { color: #4CAF50; }
+    .expenses-icon { color: #F44336; }
+    
+    .module-card h3 {
+        margin-bottom: 15px;
+        color: #ffffff;
+        font-size: 22px;
+    }
+    
+    .module-card p {
+        color: #cccccc;
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    
+    .module-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #2196F3;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.2s;
+    }
+    
+    .inventory-btn { background-color: #2196F3; }
+    .inventory-btn:hover { background-color: #0d8aee; }
+    
+    .tasks-btn { background-color: #4CAF50; }
+    .tasks-btn:hover { background-color: #3e9e41; }
+    
+    .expenses-btn { background-color: #F44336; }
+    .expenses-btn:hover { background-color: #e53935; }
+</style>
+
+<div class="welcome-container">
+    <div class="welcome-header">
+        <h1>Welcome to UTIMS</h1>
+        <p class="welcome-message">Unified Task and Inventory Management System</p>
+    </div>
+    
+    <div class="user-info">
+        <h3>Hello, {{ user.first_name }} {{ user.last_name }}</h3>
+        <p>Username: {{ user.username }} | Role: {{ user.get_role_display }}</p>
+    </div>
+    
+    <p class="module-intro">Please select a module to get started:</p>
+    
+    <div class="module-cards">
+        <div class="module-card">
+            <div class="module-icon inventory-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <h3>Inventory</h3>
+            <p>Manage inventory items, track stock levels, and view inventory reports.</p>
+            <a href="{% url 'inventory:list' %}" class="module-btn inventory-btn">Open</a>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-icon tasks-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <h3>Tasks</h3>
+            <p>Create and manage tasks, assign them to users, and track progress.</p>
+            <a href="{% url 'tasks:list' %}" class="module-btn tasks-btn">Open</a>
+        </div>
+        
+        <div class="module-card">
+            <div class="module-icon expenses-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3>Expenses</h3>
+            <p>Track expenses, manage budgets, and generate expense reports.</p>
+            <a href="{% url 'expenses:list' %}" class="module-btn expenses-btn">Open</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

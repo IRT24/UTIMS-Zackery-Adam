@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #fff;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
+    }
+
+    .form-group textarea {
+        height: 100px;
+        resize: vertical;
+    }
+
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+
+    .cancel-btn {
+        background-color: #666;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+    
+    .required-field {
+        color: #f44336;
+        font-weight: bold;
+        margin-left: 4px;
+    }
+    
+    .field-help {
+        color: #999;
+        font-size: 0.85em;
+        margin-top: 4px;
+    }
+</style>
+
+<div class="form-container">
+    <h2>{% if object %}Edit Expense{% else %}Create New Expense{% endif %}</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% if field.name == 'receipt' %}
+                    <span class="required-field">*</span>
+                    <div class="field-help">
+                        A receipt image is required for all expenses
+                    </div>
+                {% endif %}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error" style="color: #f44336;">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">
+                {% if object %}Save Changes{% else %}Create Expense{% endif %}
+            </button>
+            <a href="{% url 'expenses:list' %}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

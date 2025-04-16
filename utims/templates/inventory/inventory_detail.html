@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .action-btn {
+        text-decoration: none;
+        margin-left: 10px;
+        padding: 8px 15px;
+        border-radius: 4px;
+        color: white;
+    }
+    
+    .back-btn { 
+        background-color: #555; 
+    }
+    
+    .edit-btn { 
+        background-color: #FFC107; 
+    }
+    
+    .delete-btn { 
+        background-color: #f44336; 
+    }
+    
+    .item-details {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .item-details h3 {
+        border-bottom: 1px solid #444;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .detail-row {
+        display: flex;
+        margin-bottom: 15px;
+    }
+    
+    .detail-label {
+        flex: 0 0 30%;
+        font-weight: bold;
+        color: #aaa;
+    }
+    
+    .detail-value {
+        flex: 0 0 70%;
+    }
+    
+    .low-stock {
+        color: #f44336;
+        font-weight: bold;
+    }
+
+    .history-section {
+        margin-top: 30px;
+    }
+
+    .history-section h3 {
+        border-bottom: 1px solid #444;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .log-item {
+        background-color: #333;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .log-action-add {
+        color: #4CAF50;
+    }
+
+    .log-action-remove {
+        color: #f44336;
+    }
+
+    .log-action-update {
+        color: #2196F3;
+    }
+
+    .log-timestamp {
+        color: #888;
+        font-size: 0.9em;
+    }
+</style>
+
+<div class="detail-container">
+    <div class="item-header">
+        <h2>{{ item.name }}</h2>
+        <div>
+            <a href="{% url 'inventory:list' %}" class="action-btn back-btn">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'inventory:edit' item.id %}" class="action-btn edit-btn">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{% url 'inventory:delete' item.id %}" class="action-btn delete-btn">
+                <i class="fas fa-trash"></i> Delete
+            </a>
+        </div>
+    </div>
+
+    <div class="item-details">
+        <h3>Item Details</h3>
+        
+        <div class="detail-row">
+            <div class="detail-label">Name:</div>
+            <div class="detail-value">{{ item.name }}</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Category:</div>
+            <div class="detail-value">{{ item.category.name }}</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Quantity:</div>
+            <div class="detail-value {% if item.is_low_stock %}low-stock{% endif %}">
+                {{ item.quantity }}
+                {% if item.is_low_stock %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>(Below threshold of {{ item.low_stock_threshold }})</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Price per Unit:</div>
+            <div class="detail-value">${{ item.price_per_unit }}</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Low Stock Threshold:</div>
+            <div class="detail-value">{{ item.low_stock_threshold }}</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Last Updated:</div>
+            <div class="detail-value">{{ item.last_updated }}</div>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <h3>Inventory History</h3>
+        
+        {% if logs %}
+            {% for log in logs %}
+            <div class="log-item">
+                <span class="
+                    {% if log.action == 'ADD' %}log-action-add{% endif %}
+                    {% if log.action == 'REMOVE' %}log-action-remove{% endif %}
+                    {% if log.action == 'UPDATE' %}log-action-update{% endif %}
+                ">
+                    <i class="
+                        {% if log.action == 'ADD' %}fas fa-plus-circle{% endif %}
+                        {% if log.action == 'REMOVE' %}fas fa-minus-circle{% endif %}
+                        {% if log.action == 'UPDATE' %}fas fa-sync{% endif %}
+                    "></i>
+                    {{ log.get_action_display }}: {{ log.quantity_changed }} units
+                </span>
+                <div>{{ log.remarks }}</div>
+                <div class="log-timestamp">{{ log.timestamp }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No inventory history available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

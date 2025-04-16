@@ -1,0 +1,161 @@
+{% extends 'auth/base_auth.html' %}
+
+{% block title %}Login - UTIMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        background-color: #1e1e1e;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .auth-header h2 {
+        color: #fff;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    
+    .auth-header p {
+        color: #aaa;
+    }
+    
+    .auth-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #ddd;
+    }
+    
+    .auth-form input[type="text"],
+    .auth-form input[type="password"],
+    .auth-form input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+    
+    .auth-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+    
+    .auth-btn:hover {
+        background-color: #45a049;
+    }
+    
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .auth-links a {
+        color: #2196F3;
+        text-decoration: none;
+    }
+    
+    .auth-alert {
+        background-color: #f44336;
+        color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+    
+    .password-container {
+        position: relative;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .password-toggle:hover {
+        color: #ffffff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h2>Login to UTIMS</h2>
+        <p>Please enter your credentials</p>
+    </div>
+    
+    {% if form.errors %}
+    <div class="auth-alert">
+        Your username and password didn't match. Please try again.
+    </div>
+    {% endif %}
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" required>
+        </div>
+        
+        <div>
+            <label for="id_password">Password:</label>
+            <div class="password-container">
+                <input type="password" name="password" id="id_password" required>
+                <button type="button" class="password-toggle" onclick="togglePassword()">
+                    <i class="fas fa-eye" id="password-toggle-icon"></i>
+                </button>
+            </div>
+        </div>
+        
+        <button type="submit" class="auth-btn">Login</button>
+        
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    
+    <!-- Sign-up option removed for security reasons -->
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('id_password');
+    const toggleIcon = document.getElementById('password-toggle-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete User - UTIMS{% endblock %}
+
+{% block content %}
+<style>
+    .delete-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #2a2a2a;
+        border-radius: 5px;
+        text-align: center;
+    }
+    
+    .delete-message {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+    
+    .user-details {
+        background-color: #333;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .user-details p {
+        margin: 5px 0;
+        color: #ddd;
+    }
+    
+    .user-details strong {
+        color: #fff;
+    }
+    
+    .delete-actions {
+        margin-top: 20px;
+    }
+    
+    .btn-danger {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .btn-secondary {
+        background-color: #777;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+    
+    .warning-text {
+        color: #F44336;
+        font-weight: bold;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="container">
+    <div class="delete-container">
+        <h2>Delete User</h2>
+        
+        <div class="delete-message">
+            Are you sure you want to delete the user <strong>{{ object.username }}</strong>?
+        </div>
+        
+        <div class="user-details">
+            <p><strong>Username:</strong> {{ object.username }}</p>
+            <p><strong>Full Name:</strong> {{ object.first_name }} {{ object.last_name }}</p>
+            <p><strong>Email:</strong> {{ object.email }}</p>
+            <p><strong>Role:</strong> {{ object.get_role_display }}</p>
+            <p><strong>Date Joined:</strong> {{ object.date_joined|date:"M d, Y" }}</p>
+        </div>
+        
+        <p class="warning-text">This action cannot be undone!</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <button type="submit" class="btn btn-danger">Delete User</button>
+                <a href="{% url 'users:list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
