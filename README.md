@@ -1,2 +1,2 @@
 # UTIMS-Zackery-Adam
-FYP's Unified Task and Inventory Management System
+CT206 Final Year Project's Unified Task and Inventory Management System
