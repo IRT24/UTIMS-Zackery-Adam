@@ -1,6 +1,3 @@
-
-import dj_database_url
-from urllib.parse import urlparse
 import os
 import dj_database_url
 from pathlib import Path
@@ -69,6 +66,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'utims.wsgi.application'
 
+# Custom user model
+AUTH_USER_MODEL = 'users.CustomUser'
+
 # Database Configuration
 DATABASES = {
     'default': dj_database_url.config(
@@ -99,12 +99,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Add these security settings
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
 # Static files settings
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -118,6 +112,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -128,3 +123,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+# Security Settings
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
