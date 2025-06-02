@@ -1,3 +1,6 @@
+
+import dj_database_url
+from urllib.parse import urlparse
 import os
 import dj_database_url
 from pathlib import Path
@@ -69,8 +72,8 @@ WSGI_APPLICATION = 'utims.wsgi.application'
 # Database Configuration
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:postgres@localhost:5432/utims',
-        conn_max_age=600
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -95,6 +98,12 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
+# Add these security settings
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Static files settings
 STATIC_URL = '/static/'
