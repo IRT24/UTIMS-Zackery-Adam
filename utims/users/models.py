@@ -1,35 +1,23 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
+from django.db import models
 
 class CustomUser(AbstractUser):
-    ROLE_CHOICES = (
-        ('admin', 'Admin'),
-        ('employee', 'Employee'),
+    # Add related_name to avoid conflicts
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
     )
-    
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='employee')
-    
-    def is_admin(self):
-        return self.role == 'admin'
-    
-    def is_employee(self):
-        return self.role == 'employee'
-
-class UserActivity(models.Model):
-    ACTION_CHOICES = (
-        ('login', 'Login'),
-        ('logout', 'Logout'),
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
     )
-    
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='activities')
-    action = models.CharField(max_length=10, choices=ACTION_CHOICES)
-    timestamp = models.DateTimeField(default=timezone.now)
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
-    
-    class Meta:
-        ordering = ['-timestamp']
-        verbose_name_plural = 'User Activities'
-    
-    def __str__(self):
-        return f"{self.user.username} - {self.get_action_display()} at {self.timestamp}" 
+    # Your existing custom fields
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    position = models.CharField(max_length=100, blank=True, null=True)
